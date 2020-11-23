@@ -37,36 +37,34 @@ client.on('message', async message => {
   if (message.content === ACTIVITY_NAME) {
     // reply how to use
     message.reply(DESCRIPTION);
-  } else {
+  } else if (client.user !== null && message.mentions.users.has(client.user.id)) {
     // send gamelist by DM
-    if (client.user !== null && message.mentions.users.has(client.user.id)) {
-      const regex = /<@.+>/;
-      const id = message.content.replace(regex, '');
-      console.log(`Get Steam ID: ${id}`);
+    const regex = /<@.+>/;
+    const id = message.content.replace(regex, '');
+    console.log(`Get Steam ID: ${id}`);
 
-      try {
-        const gameList = await getGameList(id);
-        if (gameList !== [] || gameList !== undefined || gameList !== null) {
-          const gameListMessage: string = gameList.join('\n');
-          const authorId = message.author.id;
-          const authorUser = client.users.cache.get(authorId);
-          if (authorUser !== undefined) {
-            authorUser.send(gameListMessage);
-          } else {
-            message.reply('error: discord user is not found');
-          }
+    try {
+      const gameList = await getGameList(id);
+      if (gameList !== [] || gameList !== undefined || gameList !== null) {
+        const gameListMessage: string = gameList.join('\n');
+        const authorId = message.author.id;
+        const authorUser = client.users.cache.get(authorId);
+        if (authorUser !== undefined) {
+          authorUser.send(gameListMessage);
         } else {
-          message.reply('error: failed getting game list from steam');
+          message.reply('error: discord user is not found');
         }
-      } catch (e) {
-        console.log(e);
-        message.reply('error: unknown error');
+      } else {
+        message.reply('error: failed getting game list from steam');
       }
-
-    } else {
-      console.log('unknown error');
-      message.reply('error: request is incorrect');
+    } catch (e) {
+      console.log(e);
+      message.reply('error: unknown error');
     }
+
+  } else {
+    console.log('unknown error');
+    message.reply('error: request is incorrect');
   }
 });
 
