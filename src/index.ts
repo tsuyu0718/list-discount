@@ -61,10 +61,6 @@ client.on('message', async message => {
       console.log(e);
       message.reply('error: unknown error');
     }
-
-  } else {
-    console.log('unknown error');
-    message.reply('error: request is incorrect');
   }
 });
 
