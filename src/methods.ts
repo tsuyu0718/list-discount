@@ -10,7 +10,7 @@ const STEAM_STORE_API = "https://store.steampowered.com/api/appdetails/";
 const STEAM_STORE_URL = "https://store.steampowered.com/app/";
 const JSON_FORMAT = "json";
 const PRICE_OVERVIEW = "price_overview";
-
+const COUNTRY_CODE = "jp";
 
 export async function getGameList(id: string) : Promise<string[]> {
   return new Promise((resolve, reject) => {
@@ -78,6 +78,7 @@ export async function getDiscount(appids: number[]) {
   const config: AxiosRequestConfig = {
     params: {
       appids: paramAppIds,
+      cc: COUNTRY_CODE,
       filters: PRICE_OVERVIEW,
     },
   };
