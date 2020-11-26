@@ -46,11 +46,20 @@ client.on('message', async message => {
     try {
       const gameList = await getGameList(id);
       if (gameList !== [] || gameList !== undefined || gameList !== null) {
-        const gameListMessage: string = gameList.join('\n');
         const authorId = message.author.id;
         const authorUser = client.users.cache.get(authorId);
         if (authorUser !== undefined) {
-          authorUser.send(gameListMessage);
+          let gameListMessage = '';
+          for (const item of gameList) {
+            gameListMessage = gameListMessage + item + '\n';
+            if (gameListMessage.length > 1000) {
+              authorUser.send(gameListMessage);
+              gameListMessage = '';
+            }
+          }
+          if (gameListMessage.length !== 0) {
+            authorUser.send(gameListMessage);
+          }
         } else {
           message.reply('error: discord user is not found');
         }
